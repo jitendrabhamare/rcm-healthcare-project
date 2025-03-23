@@ -1,0 +1,72 @@
+[
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalA",
+        "FileName": "departments.csv",
+        "DatabaseName": "rcm-hospital-a",
+        "TableName": "Departments"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalA",
+        "FileName": "providers.csv",
+        "DatabaseName": "rcm-hospital-a",
+        "TableName": "Providers"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalA",
+        "FileName": "encounters.csv",
+        "DatabaseName": "rcm-hospital-a",
+        "TableName": "Encounters"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalA",
+        "FileName": "patients.csv",
+        "DatabaseName": "rcm-hospital-a",
+        "TableName": "Patients"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalA",
+        "FileName": "transactions.csv",
+        "DatabaseName": "rcm-hospital-a",
+        "TableName": "Transactions"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalB",
+        "FileName": "departments.csv",
+        "DatabaseName": "rcm-hospital-b",
+        "TableName": "Departments"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalB",
+        "FileName": "providers.csv",
+        "DatabaseName": "rcm-hospital-b",
+        "TableName": "Providers"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalB",
+        "FileName": "encounters.csv",
+        "DatabaseName": "rcm-hospital-b",
+        "TableName": "Encounters"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalB",
+        "FileName": "patients.csv",
+        "DatabaseName": "rcm-hospital-b",
+        "TableName": "Patients"
+    },
+    {
+        "Container": "raw-data-for-sql-database",
+        "FilePath": "HospitalB",
+        "FileName": "transactions.csv",
+        "DatabaseName": "rcm-hospital-b",
+        "TableName": "Transactions"
+    }
+]
