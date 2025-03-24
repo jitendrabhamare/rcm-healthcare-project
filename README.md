@@ -2,7 +2,11 @@
 
 ![Azure Badge](https://img.shields.io/badge/Azure-Cloud-blue) ![Data Engineering](https://img.shields.io/badge/Data-Engineering-green) ![Healthcare](https://img.shields.io/badge/Industry-Healthcare-orange)
 
-Welcome to the **RCM Healthcare Data Pipeline Project**! This repository contains an end-to-end data pipeline built to process Revenue Cycle Management (RCM) data for two fictional hospitals, transforming raw hospital records into actionable financial insights. Using Microsoft Azure tools—Data Factory, Databricks, ADLS Gen2, SQL Database, Key Vault, and Unity Catalog—I’ve created a scalable, secure Medallion architecture (Bronze → Silver → Gold) that automates data ingestion, cleaning, historization, and reporting. Whether you’re a Data Engineer exploring Azure pipelines or a healthcare analyst curious about RCM, this project offers a practical blueprint to learn from or adapt.
+Welcome to the **RCM Healthcare Data Pipeline Project**!
+
+This repository contains an end-to-end data pipeline for processing Revenue Cycle Management (RCM) data from two fictional hospitals, transforming raw hospital records into actionable financial insights. Built using Microsoft Azure tools—Data Factory, Databricks, ADLS Gen2, SQL Database, Key Vault, and Unity Catalog—this project follows a **Medallion architecture** (Bronze → Silver → Gold) to automate data ingestion, cleaning, historization, and reporting.
+
+Whether you’re a Data Engineer exploring Azure pipelines or a Healthcare Analyst working with RCM data, this project serves as a practical blueprint to learn from or adapt.
 
 ## Table of Contents
 
@@ -23,12 +27,18 @@ Welcome to the **RCM Healthcare Data Pipeline Project**! This repository contain
 
 ## Overview
 
-Revenue Cycle Management (RCM) tracks a hospital’s financial journey—from patient visits to payments—handling data like patient details, encounters, bills, and insurance claims. This project builds a data pipeline to automate that process for two hospitals (`rcm-hospital-a`, `rcm-hospital-b`), delivering KPIs like Days in Accounts Receivable (AR) to optimize cash flow. It’s split into two parts:
+The pipeline consists of two main stages:
 
-1. **Part 1: Ingestion to Bronze** - Moves raw EMR data from Azure SQL Databases to ADLS Gen2 Bronze as Parquet files using metadata-driven Azure Data Factory (ADF) pipelines.
-2. **Part 2: Transformation to Silver & Gold** - Cleans and historizes data in Databricks (Silver), then creates business-ready Fact and Dimension tables (Gold) with Delta tables.
+1. **Ingestion to Bronze (Raw Data Layer)**
+- Extracts raw Electronic Medical Records (EMR) data from Azure SQL Databases
+- Loads it into Azure Data Lake Storage Gen2 (ADLS Gen2) Bronze layer as Parquet files
+- Uses metadata-driven Azure Data Factory (ADF) pipelines for automation
 
-The result? A robust pipeline that turns chaotic hospital data into clean, historized tables for financial reporting—all hosted in this repo!
+2. **Transformation to Silver & Gold (Processed & Business-ready Data)**
+- Cleans and historizes data in Databricks (Silver Layer)
+- Creates business-ready Fact and Dimension tables in Delta format (Gold Layer)
+
+The outcome is a **scalable**, **secure**, and **fully automated data pipeline** that transforms raw, unstructured hospital data into clean, historized tables optimized for financial reporting—all documented within this repository.
 
 ![Overview Image](images/overview.png)
 
