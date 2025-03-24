@@ -103,34 +103,110 @@ This pipeline processes data from **three primary sources**, each ingested into 
 
 ## Pipeline Steps & Flow  
 
-This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silver → Gold), progressively refining raw data into business-ready insights.  
+This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silver → Gold), progressively refining raw hospital RCM data into **business-ready insights**. Each stage builds upon the last, handling **multiple data sources (EMR databases, claims CSVs, APIs)** through **ingestion, transformation, and aggregation**. The architecture ensures **scalability, data quality, historization, and optimized performance** for downstream analytics.  
+
+---
 
 ### **1. Data Ingestion (Landing → Bronze Layer)**  
+
 - **Format:** Parquet  
-- **Processing Logic:**  
-  - EMR data is extracted from **SQL databases** → loaded into **Bronze (Parquet format)**  
-  - Claims data is **ingested from Landing (CSV)** → converted to **Parquet in Bronze**  
-  - NPI & ICD codes are **fetched via API calls** → stored as **Parquet in Bronze**  
+- **Objective:** Standardize raw data ingestion for structured storage.  
+
+#### **Sources & Processing Logic:**  
+
+1. **EMR Data Extraction**  
+   - Extracts **Electronic Medical Records (EMR)** from hospital databases.  
+   - Supports **full** (entire dataset) and **incremental** (only new/modified records) loads.  
+   - Data stored in the **Bronze Layer (Parquet format)**, maintaining raw structure for historical tracking.  
+
+2. **Claims Data Ingestion**  
+   - Insurance claims data arrives as **CSV files** in the **Landing Layer**.  
+   - Converted to **Parquet format** in the **Bronze Layer**, optimizing for efficient storage and querying.  
+
+3. **NPI & ICD Code Fetching**  
+   - Public APIs provide **provider (NPI) and diagnosis (ICD) codes**.  
+   - Data is fetched programmatically and stored in the **Bronze Layer** for downstream enrichment.  
+
+#### **Why Parquet?**  
+- **Columnar storage** improves query speed.  
+- **Compression (Snappy, Gzip)** reduces storage footprint.  
+- **Schema evolution support** ensures flexibility.  
+
+---
 
 ### **2. Data Transformation (Bronze → Silver Layer)**  
+
 - **Format:** Delta Tables  
-- **Processing Logic:**  
-  - **Data Cleaning & Standardization:** Aligns schemas into a **Common Data Model (CDM)**  
-  - **Slowly Changing Dimensions Type 2 (SCD2):**  
-    - Tracks **historical changes** (e.g., patient address updates)  
-    - Uses an `is_current` flag to differentiate **active vs. past records**  
-  - **Example tables:**  
-    - `silver.patients` (historized)  
-    - `silver.departments` (full refresh)  
+- **Objective:** Clean, unify, and historize data while maintaining integrity.  
+
+#### **Processing Logic:**  
+
+1. **Data Cleaning & Standardization**  
+   - Schema unification (e.g., `PatientID` from different hospitals mapped to `SRC_PatientID`).  
+   - Deduplication and null handling (e.g., flagging missing critical fields).  
+
+2. **Full Refresh for Static Tables**  
+   - Example: **Department Listings**  
+   - Merges data from multiple sources, ensuring a **current** and **de-duplicated** view.  
+
+3. **Slowly Changing Dimensions Type 2 (SCD2) for Dynamic Tables**  
+   - Example: **Patient Data**  
+   - Tracks historical changes (e.g., address updates).  
+   - Ensures previous records remain available while marking the latest as `is_current = true`.  
+
+#### **Why Delta?**  
+- **ACID Transactions** ensure consistency in merges and updates.  
+- **Versioning** allows rollback to previous states if needed.  
+- **Optimized for high-performance transformations** in a structured lakehouse environment.  
+
+---
+
+![RCM LLD ](images/azure-de-project-lld.png)
 
 ### **3. Data Aggregation (Silver → Gold Layer)**  
+
 - **Format:** Delta Tables  
-- **Processing Logic:**  
-  - **Fact Table:** `gld_transactions` (aggregated claims & payment data)  
-  - **Dimension Table:** `gld_patients` (historized patient records)  
-  - **Filters:**  
-    - `is_current = true` (latest records)  
-    - `is_quarantined = false` (valid data only)  
+- **Objective:** Create **business-ready, analytics-friendly** data.  
+
+#### **Processing Logic:**  
+
+1. **Fact Table Creation (`gld_transactions`)**  
+   - Aggregates **claims and payment** data.  
+   - Ensures only **valid and active records** contribute to KPIs.  
+
+2. **Dimension Table Creation (`gld_patients`)**  
+   - Stores **historized patient details**, ensuring **only the latest, valid data** is included.  
+
+3. **Filtering & Quality Checks**  
+   - `is_current = true` ensures only the latest active records are used.  
+   - `is_quarantined = false` removes incomplete or invalid data.
+
+#### **Why Gold?**  
+- Business-friendly format for **executives, analysts, and dashboards**.  
+- Aggregated KPIs like **Days in Accounts Receivable (AR)**.  
+- Simplifies **reporting and visualization** without the complexity of raw transactional data.  
+
+---
+
+### **4. End-to-End Data Flow**  
+
+Below is a **high-level overview** of the pipeline’s data movement:  
+
+```plaintext
+SQL DBs / APIs / CSVs  
+       │  
+       ▼  
+Landing Layer (Raw Claims Data - CSV)  
+       │  
+       ▼  
+Bronze Layer (Parquet - Unstructured, Source of Truth)  
+       │  
+       ▼  
+Silver Layer (Delta Tables - Cleaned, Standardized, Historized)  
+       │  
+       ▼  
+Gold Layer (Delta Tables - Aggregated, Business-Ready)
+```
 
 ---
 
