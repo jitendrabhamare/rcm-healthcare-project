@@ -72,39 +72,79 @@ The outcome is a **scalable**, **secure**, and **fully automated data pipeline**
 
 These enhancements transformed a prototype into a scalable, secure, and efficient system, ready to handle real-world RCM challenges.
 
-## Pipeline Steps & Flow
-
-Here’s how data moves from raw sources to polished reports:
-
-1. **Setup Azure Resources**:
-   - Resource Group: `rcm-azure-project`
-   - Storage: `rcmadlsdevnew` (containers: `landing`, `bronze`, `silver`, `gold`, `configs`)
-   - SQL DBs: `rcm-hospital-a`, `rcm-hospital-b` (5 tables each)
-   - ADF: `rcm-health-projectdev`
-   - Databricks: `rcm-hc-adb-ws`
-
-2. **Preprocessing**:
-   - Pipeline: `pl_to_insert_data_to_sql_table_preprocessing`
-   - Loads CSVs (`HospitalA.csv`, `HospitalB.csv`) into SQL tables—seeds EMR data.
-
-3. **Ingestion to Bronze**:
-   - Pipelines: `pl_emr_src_to_landing` (parent), `pl_copy_from_emr` (child)
-   - Reads `load_config.csv`, copies SQL to Bronze Parquet (full/incremental), logs to `audit.load_logs`.
-
-4. **Silver Transformation**:
-   - **Full Refresh**: Truncates and reloads `silver.departments`—unifies `hosa`/`hosb`, adds `is_quarantined`.
-   - **SCD2**: Historizes `silver.patients`—CDM unifies schemas, two `MERGE`s track changes (e.g., address updates).
-
-5. **Gold Transformation**:
-   - Pipeline: `pl_silver_to_gold`
-   - Filters Silver (`is_current = true`, `is_quarantined = false`) into Fact (`gld_transactions`) and Dimension (`gld_patients`) tables.
-
-**Flow**:  
-```
-SQL DBs --> ADF (Bronze Parquet) --> Databricks (Silver Delta) --> Databricks (Gold Delta)
-```
 
 ![Pipeline Flow Diagram](images/pipeline_flow.png)
+
+## Data Sources  
+
+This pipeline processes data from **three primary sources**, each ingested into the system based on its format and update frequency.  
+
+### **1. Electronic Medical Records (EMR)**  
+- **Source:** SQL Databases  
+- **Data:** Patient demographics, encounters, trasactions, departments, insurance providers  
+- **Update Frequency:** Continuous  
+- **Storage:** Directly loaded into the **Bronze Layer (Parquet format)**
+
+### **2. Claims Data**  
+- **Source:** Flat files (CSV)  
+- **Data:** Monthly insurance claims submitted by hospitals  
+- **Update Frequency:** Monthly  
+- **Storage:** Initially stored in the **Landing Layer (CSV format)** before ingestion into Bronze  
+
+### **3. Code Mappings (NPI & ICD Codes)**  
+- **Source:** Public APIs  
+- **Data:**  
+  - **National Provider Identifier (NPI):** Unique IDs assigned to healthcare providers  
+  - **ICD Codes:** Standardized diagnostic codes  
+- **Update Frequency:** As per API availability  
+- **Storage:** Directly loaded into the **Bronze Layer (Parquet format)**  
+
+---
+
+## Pipeline Steps & Flow  
+
+This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silver → Gold), progressively refining raw data into business-ready insights.  
+
+### **1. Data Ingestion (Landing → Bronze Layer)**  
+- **Format:** Parquet  
+- **Processing Logic:**  
+  - EMR data is extracted from **SQL databases** → loaded into **Bronze (Parquet format)**  
+  - Claims data is **ingested from Landing (CSV)** → converted to **Parquet in Bronze**  
+  - NPI & ICD codes are **fetched via API calls** → stored as **Parquet in Bronze**  
+
+### **2. Data Transformation (Bronze → Silver Layer)**  
+- **Format:** Delta Tables  
+- **Processing Logic:**  
+  - **Data Cleaning & Standardization:** Aligns schemas into a **Common Data Model (CDM)**  
+  - **Slowly Changing Dimensions Type 2 (SCD2):**  
+    - Tracks **historical changes** (e.g., patient address updates)  
+    - Uses an `is_current` flag to differentiate **active vs. past records**  
+  - **Example tables:**  
+    - `silver.patients` (historized)  
+    - `silver.departments` (full refresh)  
+
+### **3. Data Aggregation (Silver → Gold Layer)**  
+- **Format:** Delta Tables  
+- **Processing Logic:**  
+  - **Fact Table:** `gld_transactions` (aggregated claims & payment data)  
+  - **Dimension Table:** `gld_patients` (historized patient records)  
+  - **Filters:**  
+    - `is_current = true` (latest records)  
+    - `is_quarantined = false` (valid data only)  
+
+---
+
+## **End-User Access & Consumption**  
+
+| **Layer**  | **Primary Users**                                      | **Use Cases**                                             |
+|------------|----------------------------------------------------|---------------------------------------------------------|
+| **Bronze** | **Data Engineers**                               | Raw data ingestion, debugging, lineage tracking        |
+| **Silver** | **Data Scientists, ML Experts, Analysts**        | Machine learning models, advanced analytics, trends    |
+| **Gold**   | **Business Users**                                | Financial reporting, operational analytics, dashboards |
+
+---
+
+
 
 ## Architecture Diagram
 
