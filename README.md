@@ -220,33 +220,6 @@ Gold Layer (Delta Tables - Aggregated, Business-Ready)
 
 ---
 
-
-
-## Architecture Diagram
-
-```
-+------------------+       +------------------+       +------------------+
-| Azure SQL DBs    |       | ADLS Gen2        |       | Databricks       |
-| (rcm-hospital-a) | ----> | Bronze (Parquet) | ----> | Silver (Delta)   |
-| (rcm-hospital-b) |       |                  |       | Gold (Delta)     |
-+------------------+       +------------------+       +------------------+
-         |                         ^                         ^
-         v                         |                         |
-+------------------+       +------------------+       +------------------+
-| ADF Pipelines    |       | Key Vault        |       | Unity Catalog    |
-| pl_emr_src_to... | <---- | (rcm-hc-kv)     | ----> | (rcm_hc_adb_ws)  |
-| pl_silver_to_gold|       +------------------+       +------------------+
-```
-
-- **SQL DBs**: Source EMR data.
-- **ADF**: Moves data to Bronze, triggers Silver-to-Gold.
-- **ADLS**: Stores all layers.
-- **Databricks**: Transforms Bronze to Silver/Gold.
-- **Key Vault**: Secures credentials.
-- **Unity Catalog**: Manages tables.
-
-![Architecture Diagram](images/architecture_diagram.png)
-
 ## Key Learnings
 
 - **Metadata Magic**: `load_config.csv` made pipelines scalable—10 tables, one setup—automation at its best.
@@ -268,55 +241,6 @@ Here’s a quick guide to what’s in the repo:
 
 This layout keeps pipelines, notebooks, and configs organized—dive into what interests you!
 
-## Getting Started
-
-Want to run this pipeline? Follow these steps to set it up locally or in Azure.
-
-### Prerequisites
-
-- **Azure Subscription**: Access to ADF, Databricks, ADLS Gen2, SQL DB, Key Vault.
-- **Tools**: Azure CLI, Databricks CLI, Git.
-- **Knowledge**: Basic SQL, Python, Spark—don’t worry, it’s beginner-friendly!
-
-### Installation
-
-1. **Clone the Repo**:
-   ```bash
-   git clone https://github.com/jitendrabhamare/rcm-healthcare-project.git
-   cd rcm-healthcare-project
-   ```
-
-2. **Setup Azure Resources**:
-   - Create resource group `rcm-azure-project`.
-   - Deploy ADLS (`rcmadlsdevnew`), SQL DBs (`rcm-hospital-a`, `rcm-hospital-b`), ADF, Databricks, Key Vault via Azure Portal.
-
-3. **Configure ADF**:
-   - Import pipelines from `/adf_pipelines/` into `rcm-health-projectdev`.
-   - Update linked services with your credentials (use Key Vault).
-
-4. **Setup Databricks**:
-   - Import notebooks from `/databricks_notebooks/` into `rcm-hc-adb-ws`.
-   - Mount ADLS containers (e.g., `/mnt/bronze`).
-
-5. **Upload Config**:
-   - Place `load_config.csv` in `configs/emr/` in ADLS.
-
-### Usage
-
-1. **Run Preprocessing**:
-   - Trigger `pl_to_insert_data_to_sql_table_preprocessing` with CSVs in `landing`.
-
-2. **Ingest to Bronze**:
-   - Run `pl_emr_src_to_landing`—watch Bronze populate!
-
-3. **Transform to Silver/Gold**:
-   - Execute Silver notebooks (e.g., `departments_full_refresh`, `patients_scd2`).
-   - Trigger `pl_silver_to_gold` for Gold tables.
-
-4. **Query Results**:
-   - In Databricks: `SELECT * FROM silver.patients WHERE is_current = true`.
-
-![Usage Screenshot](images/usage_screenshot.png)
 
 ## Contributing
 
