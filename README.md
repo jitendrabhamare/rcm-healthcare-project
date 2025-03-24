@@ -6,7 +6,7 @@ Welcome to the **RCM Healthcare Data Pipeline Project**!
 
 This repository contains an end-to-end data pipeline for processing Revenue Cycle Management (RCM) data from two fictional hospitals, transforming raw hospital records into actionable financial insights. Built using Microsoft Azure tools—Data Factory, Databricks, ADLS Gen2, SQL Database, Key Vault, and Unity Catalog—this project follows a **Medallion architecture** (Bronze → Silver → Gold) to automate data ingestion, cleaning, historization, and reporting.
 
-Whether you’re a Data Engineer exploring Azure pipelines or a Healthcare Analyst working with RCM data, this project serves as a practical blueprint to learn from or adapt.
+Whether you are a Backend Software Engineer, a Data Engineer exploring Azure-based data pipelines, or a Healthcare Analyst working with RCM data, this project offers a comprehensive framework that can be leveraged for learning and adaptation.
 
 ## Table of Contents
 
@@ -40,31 +40,37 @@ The pipeline consists of two main stages:
 
 The outcome is a **scalable**, **secure**, and **fully automated data pipeline** that transforms raw, unstructured hospital data into clean, historized tables optimized for financial reporting—all documented within this repository.
 
-![Overview Image](images/overview.png)
+![Overview Image](images/azure-de-project-stages-overview.png)
 
 ## Key Features
 
-- **Metadata-Driven Pipelines**: A single config file (`load_config.csv`) drives ingestion for 10 tables—full loads for static data (e.g., `departments`), incremental for dynamic (e.g., `encounters`).
-- **Medallion Architecture**: Data flows through Bronze (raw), Silver (cleaned), and Gold (business-ready) layers, leveraging ADLS Gen2 for storage.
-- **Dual Transformation Logic**:
-  - **Full Refresh**: Replaces static Silver tables like `departments` entirely—simple and current.
-  - **SCD2**: Tracks history in dynamic tables like `patients`—preserves past records (e.g., old addresses) with `is_current` flags.
-- **Delta Tables**: Silver and Gold use Delta format for ACID transactions and versioning—reliable and rollback-friendly.
-- **Security with Key Vault**: Credentials (e.g., SQL passwords) are stored securely in Azure Key Vault, not hardcoded.
-- **Unity Catalog**: Centralizes table management in Databricks—organized and governed.
+- **Metadata-Driven Pipelines** – A single configuration file (`load_config.csv`) orchestrates data ingestion for 10 tables, supporting:
+  - **Full** loads for static data (e.g., `departments`).
+  - **Incremental** loads for dynamic data (e.g., `encounters`).
+- **Medallion Architecture** – Implements a layered data flow:
+  - Bronze (Raw data storage in ADLS Gen2).
+  - Silver (Cleansed and historized data).
+  - Gold (Business-ready analytics layer).
+- **Dual Transformation Logic** – Supports two data update strategies:
+  - **Full Refresh** – Replaces static Silver tables (e.g., `departments`) entirely.
+  - **Slowly Changing Dimension Type 2 (SCD2)** – Tracks history in dynamic tables like `patients`—preserves past records (e.g., old addresses) with `is_current` flags.
+- **Delta Tables** – Silver and Gold layers utilize Delta format, enabling:
+  - ACID transactions for data integrity.
+  - Versioning & rollback capabilities for auditing and recovery.
+- Enhanced Security with **Key Vault** – Stores sensitive credentials (e.g., SQL passwords) securely in Azure Key Vault, preventing hardcoding.
+- Centralized Governance with **Unity Catalog** – Centralizes table management in Databricks—organized and governed.
 
-![Key Features Image](images/key_features.png)
+<!-- ![Key Features Image](images/key_features.png) -->
 
 ## Achievements & Improvements
 
-- **Scalability**: One pipeline handles 10 tables via `load_config.csv`—add a new table, just update the config, no code changes needed.
-- **Performance Boost**: Parallelized `pl_emr_src_to_landing` (batch count 5)—cut ingestion time for large datasets.
-- **Flexibility**: Added `is_active` flag in config—skip inactive tables without pipeline edits.
-- **Security Upgrade**: Moved from hardcoded credentials to Key Vault—production-ready and leak-proof.
-- **Error Handling**: Fixed SQL timeouts (firewall tweak), “Missing name” errors (rebuilt If activity), and cluster failures (updated IDs)—robust troubleshooting in action.
-- **Efficiency**: Mounted ADLS containers in Databricks—faster access, cleaner code.
+- **Scalability** – A single pipeline processes 10 tables using `load_config.csv`. Adding a new table requires only a config update—no code changes needed.
+- **Performance Optimization** – Parallelized `pl_emr_src_to_landing` (batch count: 5), reducing ingestion time for large datasets.
+- **Enhanced Flexibility** – Introduced an `is_active` flag in the config file, allowing tables to be skipped without modifying the pipeline code.
+- **Security Upgrade** – Eliminated hardcoded credentials, migrating to Azure Key Vault for a production-ready, secure, and leak-proof implementation.
+- **Improved Efficiency** – Mounted ADLS containers in Databricks, enabling faster access and cleaner code.
 
-These wins turned a prototype into a scalable, secure, efficient system—ready for real-world RCM challenges!
+These enhancements transformed a prototype into a scalable, secure, and efficient system, ready to handle real-world RCM challenges.
 
 ## Pipeline Steps & Flow
 
