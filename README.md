@@ -300,7 +300,7 @@ This project is licensed under the MIT License—see [LICENSE](LICENSE.md) for d
 
 Questions or ideas? Reach me at:  
 - **GitHub**: [jitendrabhamare](https://github.com/jitendrabhamare)  
-- **Email**: jitendra@example.com (replace with your real email if desired)  
+- **Email**: jitendra@example.com  
 
 Happy engineering!
 
