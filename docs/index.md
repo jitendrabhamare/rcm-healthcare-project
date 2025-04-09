@@ -1,9 +1,7 @@
----
 # RCM Healthcare Data Pipeline
 
 ![Azure Badge](https://img.shields.io/badge/Azure-Cloud-blue) ![Data Engineering](https://img.shields.io/badge/Data-Engineering-green) ![Healthcare](https://img.shields.io/badge/Industry-Healthcare-orange)
-[![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https:https://jitendrabhamare.github.io/rcm-healthcare-project/#/)
-
+[![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://jitendrabhamare.github.io/rcm-healthcare-project/#/)
 
 Welcome to the **RCM Healthcare Data Pipeline Project**!
 
@@ -44,7 +42,6 @@ The pipeline consists of two main stages:
 
 The outcome is a **scalable**, **secure**, and **fully automated data pipeline** that transforms raw, unstructured hospital data into clean, historized tables optimized for financial reporting—all documented within this repository.
 
-
 ## Key Features
 
 - **Metadata-Driven Pipelines** – A single configuration file (`load_config.csv`) orchestrates data ingestion for 10 tables, supporting:  
@@ -63,8 +60,6 @@ The outcome is a **scalable**, **secure**, and **fully automated data pipeline**
 - **Enhanced Security with Key Vault** – Stores sensitive credentials (e.g., SQL passwords) securely in Azure Key Vault, preventing hardcoding.  
 - **Centralized Governance with Unity Catalog** – Centralizes table management in Databricks—organized and governed.  
 
-<!-- ![Key Features Image](images/key_features.png) -->
-
 ## Achievements & Improvements
 
 - **Scalability** – A single pipeline processes 10 tables using `load_config.csv`. Adding a new table requires only a config update—no code changes needed.  
@@ -74,8 +69,6 @@ The outcome is a **scalable**, **secure**, and **fully automated data pipeline**
 - **Improved Efficiency** – Mounted ADLS containers in Databricks, enabling faster access and cleaner code.  
 
 These enhancements transformed a prototype into a scalable, secure, and efficient system, ready to handle real-world RCM challenges.
-
-<!-- ![Pipeline Flow Diagram](images/pipeline_flow.png) -->
 
 ## Data Sources
 
@@ -101,16 +94,11 @@ This pipeline processes data from **three primary sources**, each ingested into 
 - **Update Frequency:** As per API availability  
 - **Storage:** Directly loaded into the **Bronze Layer (Parquet format)**  
 
----
-
-
-## **Pipeline Steps & Flow**
+## Pipeline Steps & Flow
 
 This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silver → Gold), progressively refining raw hospital RCM data into **business-ready insights**. Each stage builds upon the last, handling **multiple data sources (EMR databases, claims CSVs, APIs)** through **ingestion, transformation, and aggregation**. The architecture ensures **scalability, data quality, historization, and optimized performance** for downstream analytics.
 
 ![Overview Image](assets/images/azure-de-project-stages-overview.png)
-
----
 
 ### **1. Data Ingestion (Landing → Bronze Layer)**
 
@@ -137,8 +125,6 @@ This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silve
 - **Compression (Snappy, Gzip)** reduces storage footprint.  
 - **Schema evolution support** ensures flexibility.  
 
----
-
 ### **2. Data Transformation (Bronze → Silver Layer)**
 
 - **Format:** Delta Tables  
@@ -163,8 +149,6 @@ This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silve
 - **ACID Transactions** ensure consistency in merges and updates.  
 - **Versioning** allows rollback to previous states if needed.  
 - **Optimized for high-performance transformations** in a structured lakehouse environment.  
-
----
 
 ![RCM LLD](assets/images/azure-de-project-lld.png)
 
@@ -191,8 +175,6 @@ This pipeline follows a **Medallion Architecture** (Landing → Bronze → Silve
 - Aggregated KPIs like **Days in Accounts Receivable (AR)**.  
 - Simplifies **reporting and visualization** without the complexity of raw transactional data.  
 
----
-
 ### **4. End-to-End Data Flow**
 
 Below is a **high-level overview** of the pipeline’s data movement:
@@ -213,17 +195,13 @@ Silver Layer (Delta Tables - Cleaned, Standardized, Historized)
 Gold Layer (Delta Tables - Aggregated, Business-Ready)
 ```
 
----
-
-## **End-User Access & Consumption**
+## End-User Access & Consumption
 
 | **Layer**  | **Primary Users**                  | **Use Cases**                                      |
 |------------|------------------------------------|----------------------------------------------------|
 | **Bronze** | **Data Engineers**                 | Raw data ingestion, debugging, lineage tracking   |
 | **Silver** | **Data Scientists, ML Experts, Analysts** | Machine learning models, advanced analytics, trends |
 | **Gold**   | **Business Users**                 | Financial reporting, operational analytics, dashboards |
-
----
 
 ## Key Learnings
 
@@ -280,8 +258,6 @@ This repository is organized into the following directories and files:
 
 This structured layout ensures that all components of the data pipeline are organized and easily accessible, facilitating efficient development, collaboration, and maintenance.
 
----
-
 ## Contributing
 
 Interested in enhancing this project? We welcome contributions! To get started, fork the repository, implement your improvements, and submit a pull request for review. Below are key areas where you can make an impact:
@@ -292,11 +268,9 @@ Interested in enhancing this project? We welcome contributions! To get started, 
 
 Your expertise can help elevate this pipeline—thank you for considering a contribution!
 
----
-
 ## License
 
-This project is licensed under the MIT License—see [LICENSE](LICENSE.md) for details.
+This project is licensed under the MIT License—see [LICENSE](https://github.com/jitendrabhamare/rcm-healthcare-project/blob/main/LICENSE.md) for details.
 
 ## Contact
 
@@ -305,5 +279,3 @@ Questions or ideas? Reach me at:
 - **Email**: jitendra@example.com  
 
 Happy engineering!
-
----
