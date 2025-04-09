@@ -1,6 +1,6 @@
 * [🏠 Home](#/)
 
-* [📌 Overview](#/overview)
+* [📌 Overview](#overview)
 * [🚀 Key Features](#/key-features)
 * [🏆 Achievements & Improvements](#/achievements--improvements)
 * [🗂️ Data Sources](#/data-sources)
