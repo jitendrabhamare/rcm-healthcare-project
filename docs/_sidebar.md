@@ -1,4 +1,4 @@
-* [🏠 Home](/)
+* [🏠 Home](#/)
 
 * [Overview](#overview)
 * [Key Features](#key-features)
