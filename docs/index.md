@@ -1,5 +1,5 @@
 ---
-# RCM Healthcare Data Pipeline Project
+# RCM Healthcare Data Pipeline
 
 ![Azure Badge](https://img.shields.io/badge/Azure-Cloud-blue) ![Data Engineering](https://img.shields.io/badge/Data-Engineering-green) ![Healthcare](https://img.shields.io/badge/Industry-Healthcare-orange)
 [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https:https://jitendrabhamare.github.io/rcm-healthcare-project/#/)
